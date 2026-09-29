@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Poultry Farm</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    {% if farmer_name %}
+    <div style="
+        background: #e8f5e9;
+        padding: 15px;
+        margin: 20px;
+        border-radius: 10px;
+        border-left: 5px solid #2e7d32;
+    ">
+        <h2 style="margin: 0; color: #2e7d32;">
+            👋 Welcome, {{ farmer_name }}
+        </h2>
+
+        <p style="margin: 8px 0 0;">
+            <strong>Farm:</strong> {{ farm_name }}
+            &nbsp; | &nbsp;
+            <strong>Username:</strong> {{ username }}
+        </p>
+    </div>
+    {% endif %}
+
+    <div class="dashboard">
+
+    <h1>🐔 Smart Poultry Farm</h1>
+
+    <p class="dashboard-subtitle">
+        Intelligent Poultry Farm Management System
+    </p>
+
+
+    <div class="feature-grid">
+
+
+        <!-- FARM MONITORING -->
+
+        <a href="/farm_monitoring"
+           class="feature-card">
+
+            <div class="feature-icon">
+                📊
+            </div>
+
+            <h2>
+                Farm Monitoring
+            </h2>
+
+            <p>
+                Enter and monitor real-time farm data.
+            </p>
+
+        </a>
+
+
+        <!-- SMART ANALYSIS -->
+
+        <a href="/analysis"
+           class="feature-card">
+
+            <div class="feature-icon">
+                🧠
+            </div>
+
+            <h2>
+                Smart Analysis
+            </h2>
+
+            <p>
+                Analyze farm performance and risk.
+            </p>
+
+        </a>
+
+
+        <!-- DISEASE DETECTION -->
+
+        <a href="/detect"
+           class="feature-card">
+
+            <div class="feature-icon">
+                🐔
+            </div>
+
+            <h2>
+                Chicken Disease Detection
+            </h2>
+
+            <p>
+                Upload a chicken image and detect disease signs.
+            </p>
+
+        </a>
+
+
+        <!-- WHAT IF -->
+
+        <a href="/what_if"
+           class="feature-card">
+
+            <div class="feature-icon">
+                🔮
+            </div>
+
+            <h2>
+                Farm Simulator
+            </h2>
+
+            <p>
+                Simulate future production, feed and cost.
+            </p>
+
+        </a>
+
+
+    </div>
+
+</div>
+
+</body>
+</html>

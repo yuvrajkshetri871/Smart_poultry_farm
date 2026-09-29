@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Farm What-If Simulator</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <h1>🔬 Farm What-If Simulator</h1>
+
+    <p class="dashboard-subtitle">
+        SymPy Mathematical Farm Projection
+    </p>
+
+    <div class="add-data">
+
+        <h2>📊 Enter Farm Scenario</h2>
+
+        <form action="/what_if" method="POST">
+
+            <input
+                type="number"
+                name="birds"
+                placeholder="Number of birds"
+                min="1"
+                required
+            >
+
+            <input
+                type="number"
+                name="eggs_per_bird"
+                placeholder="Eggs per bird per day"
+                step="0.01"
+                min="0"
+                required
+            >
+
+            <input
+                type="number"
+                name="feed_per_bird"
+                placeholder="Feed per bird (kg)"
+                step="0.001"
+                min="0"
+                required
+            >
+
+            <input
+                type="number"
+                name="feed_price"
+                placeholder="Feed price per kg"
+                step="0.01"
+                min="0"
+                required
+            >
+
+            <button type="submit">
+                CALCULATE PROJECTION
+            </button>
+
+        </form>
+
+    </div>
+
+
+    {% if projection %}
+
+    <div class="analysis-results">
+
+        <h2>🧠 SymPy Projection</h2>
+
+        <div class="result-cards">
+
+            <div class="result-card">
+                <h3>🥚 Projected Eggs</h3>
+                <p>{{ projection.total_eggs }}</p>
+            </div>
+
+            <div class="result-card">
+                <h3>🌾 Required Feed</h3>
+                <p>{{ projection.total_feed }} kg</p>
+            </div>
+
+            <div class="result-card">
+                <h3>💰 Feed Cost</h3>
+                <p>₹{{ projection.feed_cost }}</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <p>
+        <a href="/analysis">← Back to Farm Dashboard</a>
+    </p>
+
+</div>
+
+</body>
+
+</html>

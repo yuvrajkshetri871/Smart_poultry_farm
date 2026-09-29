@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Farm Analysis</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="dashboard">
+
+
+    <!-- =====================================================
+         MAIN HEADER
+    ====================================================== -->
+
+    <h1>🐔 Smart Poultry Farm Analysis</h1>
+
+    <!-- FARMER WELCOME SECTION -->
+<div class="welcome-section">
+    <h2>👋 Welcome, {{ farmer_name }}!</h2>
+    <p>Farm: {{ farm_name }}</p>
+    <p>Username: {{ username }}</p>
+</div>
+
+    <p class="dashboard-subtitle">
+        Real-Time Poultry Farm Monitoring & Analysis
+    </p>
+
+
+
+    <!-- =====================================================
+         DASHBOARD CARDS
+    ====================================================== -->
+
+    <div class="cards">
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                🐔
+            </div>
+
+            <h3>
+                Total Birds
+            </h3>
+
+            <p>
+                {{ birds }}
+            </p>
+
+        </div>
+
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                🥚
+            </div>
+
+            <h3>
+                Egg Production
+            </h3>
+
+            <p>
+                {{ eggs }} / Day
+            </p>
+
+        </div>
+
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                🌾
+            </div>
+
+            <h3>
+                Feed Usage
+            </h3>
+
+            <p>
+                {{ feed }} kg
+            </p>
+
+        </div>
+
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                📊
+            </div>
+
+            <h3>
+                Farm Performance
+            </h3>
+
+            <p>
+                {{ performance }}%
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         REAL-TIME FARM MONITORING
+    ====================================================== -->
+
+    <div class="add-data">
+
+
+        <h2>
+            📡 Real-Time Farm Monitoring
+        </h2>
+
+
+        <form action="/add_data"
+              method="POST">
+
+
+            <input
+                type="number"
+                name="birds"
+                placeholder="Number of birds"
+                required
+            >
+
+
+            <input
+                type="number"
+                name="eggs"
+                placeholder="Eggs produced per day"
+                required
+            >
+
+
+            <input
+                type="number"
+                name="feed"
+                placeholder="Feed used (kg)"
+                step="0.1"
+                required
+            >
+
+
+            <input
+                type="number"
+                name="performance"
+                placeholder="Performance (%)"
+                min="0"
+                max="100"
+                required
+            >
+
+
+            <input
+                type="number"
+                name="water"
+                placeholder="Water used (L)"
+                step="0.1"
+                required
+            >
+
+
+            <input
+                type="number"
+                name="temperature"
+                placeholder="Temperature (°C)"
+                step="0.1"
+                required
+            >
+
+
+            <input
+                type="number"
+                name="humidity"
+                placeholder="Humidity (%)"
+                min="0"
+                max="100"
+                step="0.1"
+                required
+            >
+
+
+            <input
+                type="number"
+                name="mortality"
+                placeholder="Mortality (birds)"
+                min="0"
+                required
+            >
+
+
+            <button type="submit">
+                SAVE FARM DATA
+            </button>
+
+
+        </form>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CHICKEN DISEASE DETECTION
+    ====================================================== -->
+
+    <div class="analysis-results">
+
+
+        <h2>
+            🐔 Chicken Disease Detection
+        </h2>
+
+
+        <form
+            action="/detect"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+
+            <input
+                type="file"
+                name="chicken_image"
+                accept="image/*"
+                required
+            >
+
+
+            <button type="submit">
+                🔍 DETECT DISEASE SIGNS
+            </button>
+
+
+        </form>
+
+
+
+        <!-- =================================================
+             SHOW UPLOADED IMAGE
+        ================================================== -->
+
+        {% if image_name %}
+
+
+            <div class="result-card">
+
+
+                <h3>
+                    🐔 Uploaded Chicken Image
+                </h3>
+
+
+                <img
+                    src="{{ url_for(
+                        'uploaded_file',
+                        filename=image_name
+                    ) }}"
+                    alt="Uploaded chicken"
+                    style="
+                        max-width:500px;
+                        width:100%;
+                        border-radius:10px;
+                    "
+                >
+
+
+            </div>
+
+
+        {% endif %}
+
+
+
+        <!-- =================================================
+             SHOW DISEASE DETECTION RESULT
+        ================================================== -->
+
+        {% if detection_results %}
+
+<div class="result-card">
+
+    <h3>🔬 Detection Result</h3>
+
+    {% for result in detection_results %}
+
+    <p>
+        <strong>Sign:</strong> {{ result.class_name }}
+    </p>
+
+    <p>
+        <strong>Confidence:</strong> {{ result.confidence }}%
+    </p>
+
+    {% endfor %}
+
+</div>
+
+{% elif image_name %}
+
+<div class="result-card">
+    <p>No disease signs detected.</p>
+</div>
+
+{% endif %}
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+     SMART FARM ANALYSIS
+====================================================== -->
+
+<div class="analysis-results">
+
+    <h2>🧠 Smart Farm Algorithm Analysis</h2>
+
+    {% if latest_analysis %}
+
+        <p>
+            🥚 Egg Production Rate:
+            {{ latest_analysis.egg_rate }}%
+        </p>
+
+        <p>
+            ⚠️ Mortality Rate:
+            {{ latest_analysis.mortality_rate }}%
+        </p>
+
+        <p>
+            🌾 Feed Efficiency:
+            {{ latest_analysis.feed_efficiency }} eggs/kg
+        </p>
+
+        <p>
+            🌡️ Environmental Risk:
+            {{ latest_analysis.environmental_risk }}
+        </p>
+
+        <p>
+            🚨 Overall Farm Risk:
+            {{ latest_analysis.overall_risk }}
+        </p>
+
+    {% else %}
+
+        <p>No algorithm result available yet.</p>
+
+    {% endif %}
+
+</div>
+
+<!-- =====================================================
+     AUTOMATIC FARM REPORT
+====================================================== -->
+
+<div class="analysis-results">
+
+    <h2>
+        📄 Automatic Farm Report
+    </h2>
+
+    <p>
+        Generate a PDF report using your latest farm data,
+        analysis results, ML risk prediction, and farm history.
+    </p>
+
+    <a
+        href="/generate_report"
+        class="what-if-button"
+    >
+        📄 GENERATE FARM REPORT
+    </a>
+
+</div>
+
+    <!-- =====================================================
+         FARM HISTORY
+    ====================================================== -->
+
+    <div class="history">
+
+
+        <h2>
+            📋 Farm History
+        </h2>
+
+
+        <div class="table-container">
+
+
+            <table>
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Birds
+                        </th>
+
+                        <th>
+                            Eggs / Day
+                        </th>
+
+                        <th>
+                            Feed (kg)
+                        </th>
+
+                        <th>
+                            Water (L)
+                        </th>
+
+                        <th>
+                            Temp °C
+                        </th>
+
+                        <th>
+                            Humidity %
+                        </th>
+
+                        <th>
+                            Mortality
+                        </th>
+
+                        <th>
+                            Performance
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+
+                <tbody>
+
+
+                    {% if history %}
+
+
+                        {% for item in history %}
+
+
+                            <tr>
+
+
+                                <td>
+                                    {{ item.birds }}
+                                </td>
+
+
+                                <td>
+                                    {{ item.eggs }}
+                                </td>
+
+
+                                <td>
+                                    {{ item.feed }}
+                                </td>
+
+
+                                <td>
+                                    {{ item.water }}
+                                </td>
+
+
+                                <td>
+                                    {{ item.temperature }}
+                                </td>
+
+
+                                <td>
+                                    {{ item.humidity }}
+                                </td>
+
+
+                                <td>
+                                    {{ item.mortality }}
+                                </td>
+
+
+                                <td>
+                                    {{ item.performance }}%
+                                </td>
+
+
+                                <td>
+
+
+                                    <form
+                                        action="/delete_data/{{ item.id }}"
+                                        method="POST"
+                                    >
+
+
+                                        <button
+                                            type="submit"
+                                            class="delete-btn"
+                                        >
+
+                                            DELETE
+
+                                        </button>
+
+
+                                    </form>
+
+
+                                </td>
+
+
+                            </tr>
+
+
+                        {% endfor %}
+
+
+                    {% else %}
+
+
+                        <tr>
+
+
+                            <td colspan="9">
+
+                                No farm records
+                                available yet.
+
+                            </td>
+
+
+                        </tr>
+
+
+                    {% endif %}
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         WHAT-IF FARM SIMULATOR
+    ====================================================== -->
+
+    <div class="analysis-results">
+
+
+        <h2>
+            🔮 Farm Simulation
+        </h2>
+
+
+        <p>
+            Simulate future farm production,
+            feed usage and cost.
+        </p>
+
+
+        <a
+            href="/what_if"
+            class="what-if-button"
+        >
+
+            🔮 What-If Farm Simulator
+
+        </a>
+
+
+    </div>
+
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<h2>📊 Farm Charts</h2>
+
+<canvas id="eggChart"></canvas>
+
+<script>
+    const chartData = {{ chart_data | default([], true) | tojson }};
+
+    new Chart(document.getElementById("eggChart"), {
+        type: "line",
+        data: {
+            labels: chartData.map(item => "Record " + item.id),
+            datasets: [{
+                label: "Egg Production",
+                data: chartData.map(item => item.eggs)
+            }]
+        }
+    });
+</script>
+
+
+<!-- =====================================================
+     END DASHBOARD
+====================================================== -->
+
+</body>
+
+</html>
